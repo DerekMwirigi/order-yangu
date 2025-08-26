@@ -8,9 +8,7 @@ import httpx
 
 router = APIRouter(prefix="/payments", tags=["payments"])
 
-
-ORDERS_INTERNAL_URL = os.getenv("ORDERS_INTERNAL_URL", "http://orders:8080/v1")
-
+ORDERS_INTERNAL_URL = os.getenv("ORDERS_INTERNAL_URL", "http://:8001/v1")
 
 @router.post("", response_model=Payment)
 async def create_payment(payload: PaymentCreate):
