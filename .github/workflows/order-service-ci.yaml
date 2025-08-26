@@ -1,7 +1,7 @@
 name: CI for order service
 on:
   pull_request:
-    branches: [  "order-service" ] # do tests on prs on order-service
+    branches: [ "main" ] # do tests on prs on main
     paths:
       - 'order-service/**' # track only on order service changes
 
