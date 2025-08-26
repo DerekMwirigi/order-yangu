@@ -34,3 +34,8 @@ Order-Yangu is an e-commerce backend built with microservices. The order-service
 *   Containerization: Docker
 *   Orchestration: Docker Compose (for local dev), gloud (for prod)
 
+
+### API Docs
+Detailed API documentation is provided via Swagger UI when the services are running
+*   Orders Service: http://localhost:8001/docs
+*   Payments Service: http://localhost:8002/docs
