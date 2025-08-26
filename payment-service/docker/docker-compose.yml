@@ -11,7 +11,7 @@ services:
       - PAYMENTS_FIRESTORE_EMULATOR_HOST=payments-firestore-emulator:8085
       - PAYMENTS_FIRESTORE_PROJECT_ID=order-yangu-payments-dev
     ports:
-      - "8001:8080"
+      - "8002:8080"
     command: sh -c "sh /app/run_app.sh"
   
   payments-firestore-emulator:
