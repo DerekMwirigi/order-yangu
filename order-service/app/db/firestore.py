@@ -14,11 +14,11 @@ _client = None
 os.environ["FIRESTORE_EMULATOR_HOST"] = os.getenv("ORDERS_FIRESTORE_EMULATOR_HOST", "localhost:8085")
 project_id = os.getenv("ORDERS_FIRESTORE_PROJECT_ID", "order-yangu-orders-dev")
 
+
 def get_client(): 
     global _client
     if _client is None:
         _client = firestore.Client( project=project_id)
-        print(f"Firestore client connected to project: {project_id}")
         
     return _client
 
@@ -32,7 +32,6 @@ def create_customer(data: Dict[str, Any]) -> Dict[str, Any]:
     ref.set(doc)
     return {"id": ref.id, **doc}
 
-
 # Product repo
 def create_product(data: Dict[str, Any]) -> Dict[str, Any]:
     db = get_client()
@@ -41,7 +40,6 @@ def create_product(data: Dict[str, Any]) -> Dict[str, Any]:
     doc = {**data, "createdAt": now, "updatedAt": now}
     ref.set(doc)
     return {"id": ref.id, **doc}
-
 
 # Order repo
 def create_order(data: Dict[str, Any]) -> Dict[str, Any]:
@@ -100,22 +98,22 @@ def list_orders(filters: Optional[Dict[str, Any]] = None,
 
     return [{"id": order.id, **order.to_dict()} for order in orders]
 
-
-
+# Update order status to paid
 def mark_order_paid(order_id: str) -> Dict[str, Any] | None:
-    db = get_client()
+    db = get_client()    
+   
     doc_ref = db.collection(COL_ORDERS).document(order_id)
-    
-    # function to perform order update in a transaction
-    def txn(tx):
-        snap = doc_ref.get(transaction=tx)
-        if not snap.exists:
-            return None
-        doc = snap.to_dict()
-        if doc.get("status") != "PAID":
-            doc["status"] = "PAID"
-            doc["updatedAt"] = date_helper.time_stamp()
-            tx.set(doc_ref, doc)
-            return {"id": snap.id, **doc}
-        
-    return db.transaction()(txn)
+    snap = doc_ref.get()
+    if not snap.exists:
+        return None
+    data = snap.to_dict()
+    update_data = {
+        "status": "PAID",
+        "updatedAt": date_helper.time_stamp(fmt="utc")
+    }
+    data.update(update_data)
+    doc_ref.set(data)
+    return {"id": doc_ref.id,
+            **data,
+            **update_data
+        }

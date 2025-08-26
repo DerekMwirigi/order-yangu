@@ -10,6 +10,7 @@ services:
     environment:
       - PAYMENTS_FIRESTORE_EMULATOR_HOST=payments-firestore-emulator:8085
       - PAYMENTS_FIRESTORE_PROJECT_ID=order-yangu-payments-dev
+      - ORDERS_INTERNAL_URL=localhost:8001/v1
     ports:
       - "8002:8080"
     command: sh -c "sh /app/run_app.sh"

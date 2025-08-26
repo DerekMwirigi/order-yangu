@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.models.payment import PaymentCreate, Payment, MpesaCallback
+from app.models.payment import PaymentCreate, Payment, MpesaConfirmation
 from app.db import firestore as repo
 from app.mpesa.client import MpesaClient
 import os
@@ -8,16 +8,13 @@ import httpx
 
 router = APIRouter(prefix="/payments", tags=["payments"])
 
-
-ORDERS_INTERNAL_URL = os.getenv("ORDERS_INTERNAL_URL", "http://orders:8080/v1")
-
+ORDERS_INTERNAL_URL = os.getenv("ORDERS_INTERNAL_URL", "http://localhost:8001/v1")
 
 @router.post("", response_model=Payment)
 async def create_payment(payload: PaymentCreate):
     """
     TODO: Check if order exists, make call to order's service
     """
-
     payment = repo.create_payment({
         "orderId": payload.orderId,
         "amount": payload.amount,
@@ -31,15 +28,13 @@ async def create_payment(payload: PaymentCreate):
     return Payment(**payment)
 
 
-@router.post("/mpesa")
-async def mpesa_callback(cb: MpesaCallback):
+@router.post("/mpesa-confirmation")
+async def mpesa_callback(cb: MpesaConfirmation):
     # TODO: verify signature
     # Map result to payment status
     status = "SUCCESS" if (cb.ResultCode == 0) else "FAILED"
-    # Suppose reference is embedded in CheckoutRequestID mapping (mock). In real, you would persist mapping.
-    payment_id = cb.CheckoutRequestID or "unknown"
+    payment_id = cb.BillRefNumber or "unknown"
     updated = repo.update_payment_status(payment_id, status, extra={"rawWebhook": cb.model_dump()})
-    
     # call Orders service to mark paid on success
     if status == "SUCCESS":
         try:
@@ -50,4 +45,4 @@ async def mpesa_callback(cb: MpesaCallback):
             pass
             """TODO: Adding error logging rollbar"""
 
-    return {"status": status}
+    return {"status": status, "payment": updated}
