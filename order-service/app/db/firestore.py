@@ -19,7 +19,6 @@ def get_client():
     global _client
     if _client is None:
         _client = firestore.Client( project=project_id)
-        print(f"Firestore client connected to project: {project_id}")
         
     return _client
 
