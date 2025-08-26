@@ -40,7 +40,6 @@ async def mpesa_callback(cb: MpesaConfirmation):
         try:
             # use async
             async with httpx.AsyncClient(timeout=10) as client:
-                print(f"{ORDERS_INTERNAL_URL}")
                 await client.post(f"{ORDERS_INTERNAL_URL}/orders/{updated['orderId']}:mark-paid")
         except Exception:
             pass
