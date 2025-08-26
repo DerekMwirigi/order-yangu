@@ -207,7 +207,7 @@ curl -X POST http://localhost:8002/v1/payments/mpesa-confirmation \
 BillRefNumber # this is payment id
 InvoiceNumber # this is order id (from order service)
 ```
-This should return payment initiated response example.
+This should return payment made success.
 ```
 {
   "status": "SUCCESS",
