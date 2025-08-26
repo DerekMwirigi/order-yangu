@@ -1,0 +1,13 @@
+services:
+  payments-app:
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+    image: order-yangu-payments-app:latest
+    environment:
+      - PAYMENTS_FIRESTORE_EMULATOR_HOST=localhost:8030
+      - PAYMENTS_FIRESTORE_PROJECT_ID=order-yangu-payments-dev
+    ports:
+      - "8002:8080"
+    command: sh -c "sh /app/run_app.sh"
+  

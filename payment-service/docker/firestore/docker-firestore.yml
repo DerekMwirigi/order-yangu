@@ -1,0 +1,13 @@
+services:
+  payments-firestore-emulator:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: order-yangu-payments-firestore-emulator
+    command: >
+      gcloud beta emulators firestore start
+      --host-port=0.0.0.0:8085
+      --project=order-yangu-payments-dev
+      --quiet
+    ports:
+      - "8040:8085"

@@ -1,0 +1,29 @@
+services:
+  payments-app:
+    depends_on:
+      - payments-firestore-emulator
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    container_name: order-yangu-payments-app
+    image: order-yangu-payments-app:latest
+    environment:
+      - PAYMENTS_FIRESTORE_EMULATOR_HOST=payments-firestore-emulator:8085
+      - PAYMENTS_FIRESTORE_PROJECT_ID=order-yangu-payments-dev
+    ports:
+      - "8002:8080"
+    command: sh -c "sh /app/run_app.sh"
+  
+  payments-firestore-emulator:
+    build:
+      context: .
+      dockerfile: ./firestore/Dockerfile
+    container_name: order-yangu-payments-firestore-emulator
+    image: order-yangu-payments-firestore-emulator:latest
+    command: >
+      gcloud beta emulators firestore start
+      --host-port=0.0.0.0:8085
+      --project=order-yangu-payments-dev
+      --quiet
+    ports:
+      - "8040:8085"

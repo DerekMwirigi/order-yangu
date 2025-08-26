@@ -1,0 +1,13 @@
+services:
+  orders-app:
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+    image: order-yangu-orders-app:latest
+    environment:
+      - ORDERS_FIRESTORE_EMULATOR_HOST=localhost:8030
+      - ORDERS_FIRESTORE_PROJECT_ID=order-yangu-orders-dev
+    ports:
+      - "8001:8080"
+    command: sh -c "sh /app/run_app.sh"
+  

@@ -1,0 +1,13 @@
+services:
+  orders-firestore:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: order-yangu-firestore-emulator
+    command: >
+      gcloud beta emulators firestore start
+      --host-port=0.0.0.0:8085
+      --project=order-yangu-orders-dev
+      --quiet
+    ports:
+      - "8030:8085"
