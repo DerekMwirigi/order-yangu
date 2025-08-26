@@ -84,7 +84,7 @@ Detailed API documentation is provided via Swagger UI when the services are runn
 #### Order Service
 1. Create an Order
 ```bash
-curl -X POST http://localhost:8001/v1/orders \
+curl -X POST http://localhost:8001/v1/orders/ \
   -H "Content-Type: application/json" \
   -d '{
     "customerId": "Cust-A",
@@ -158,5 +158,87 @@ This should return list of orders, example.
 ]
 ```
 
+#### Payment Service
+3. Initiate Mpesa STK Push
+```bash
+curl -X POST http://localhost:8002/v1/payments \
+  -H "Content-Type: application/json" \
+  -d '{
+    "orderId": "vJAgBXvDAgvcbDMG0EYs",
+    "msisdn": "254706828559",
+    "amount": 100.00
+  }' | jq
+```
+This should return payment initiated response example.
+```
+{
+  "id": "qXddGGuCrmbFHP7ZfIlq",
+  "orderId": "vJAgBXvDAgvcbDMG0EYs",
+  "amount": 100.0,
+  "currency": "KES",
+  "status": "INITIATED",
+  "createdAt": "2025-08-26T15:44:49.409166Z",
+  "updatedAt": "2025-08-26T15:44:49.409166Z"
+}
+```
+4. Simulate a Mpesa Confirmation Callback
+```bash
+curl -X POST http://localhost:8002/v1/payments/mpesa-confirmation \
+  -H "Content-Type: application/json" \
+  -d '{
+    "ResultCode":0,
+    "ResultDesc":"Accepted",
+    "TransactionType": "Pay Bill",
+    "TransID":"RKTQDM7W6S",
+    "TransTime":"20191122063845",
+    "TransAmount":"10",
+    "BusinessShortCode": "600638",
+    "BillRefNumber":"cxwHWJKkbQB81tPbPWpA",
+    "InvoiceNumber":"qXddGGuCrmbFHP7ZfIlq", 
+    "OrgAccountBalance":"",
+    "ThirdPartyTransID": "",
+    "MSISDN":"25470****149",
+    "FirstName":"John",
+    "MiddleName":"",
+    "LastName":"Doe"
+  }' | jq
+```
+```
+BillRefNumber # this is payment id
+InvoiceNumber # this is order id (from order service)
+```
+This should return payment initiated response example.
+```
+{
+  "status": "SUCCESS",
+  "payment": {
+    "id": "cxwHWJKkbQB81tPbPWpA",
+    "currency": "KES",
+    "createdAt": "2025-08-26T16:18:53.552635+00:00",
+    "idempotencyKey": null,
+    "status": "SUCCESS",
+    "orderId": "vJAgBXvDAgvcbDMG0EYs",
+    "updatedAt": "2025-08-26T16:21:21.618388+00:00",
+    "amount": 100.0,
+    "rawWebhook": {
+      "ResultCode": 0,
+      "ResultDesc": "Accepted",
+      "TransactionType": "Pay Bill",
+      "TransID": "RKTQDM7W6S",
+      "TransTime": "20191122063845",
+      "TransAmount": 10.0,
+      "BusinessShortCode": "600638",
+      "BillRefNumber": "cxwHWJKkbQB81tPbPWpA",
+      "InvoiceNumber": "qXddGGuCrmbFHP7ZfIlq",
+      "OrgAccountBalance": "",
+      "ThirdPartyTransID": "",
+      "MSISDN": "25470****149",
+      "FirstName": "John",
+      "MiddleName": "",
+      "LastName": "Doe"
+    }
+  }
+}
+```
 ### License
 This project is licensed under the MIT License - see the LICENSE file for details. (Ideally you can clone!!!)
