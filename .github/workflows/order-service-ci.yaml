@@ -6,7 +6,7 @@ on:
   push:
     branches: [ "main" ]
 env:
-  IMAGE_NAME: ghcr.io/${{ github.repository }}/orders-app
+  IMAGE_NAME: ghcr.io/${{ github.repository }}/orders-service-app
 
 jobs:
   test:
@@ -77,7 +77,7 @@ jobs:
           images: ${{ env.IMAGE_NAME }}
           tags: |
             type=sha
-            latest=true
+            type=raw,value=latest,enable=${{ github.ref_name == 'main' }} 
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
