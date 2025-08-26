@@ -2,6 +2,7 @@
 #### Order & Payment Microservices
 Order-Yangu is an e-commerce backend built with microservices. The order-service handles order creation and management, while the payment-service processes transactions. Services communicate asynchronously for scalability.
 
+![Architecture Diagram](./design-1.png)
 
 ### Repository Structure
 ```bash
