@@ -4,6 +4,7 @@ Order-Yangu is an e-commerce backend built with microservices. The order-service
 
 
 ### Repository Structure
+```bash
 ├── orders-service/          # Order management microservice
 │   ├── app/
 │   └── Dockerfile
@@ -24,7 +25,7 @@ Order-Yangu is an e-commerce backend built with microservices. The order-service
 ├── .design-1.png
 ├── LICENSE (MIT, you can fork this, for research or)
 └── README.md
-
+```
 
 ### Tech Stack
 ## Features
