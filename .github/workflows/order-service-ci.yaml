@@ -1,4 +1,4 @@
-name: CI
+name: CI for order service
 on:
   pull_request:
     branches: [  "order-service" ] # do tests on prs on order-service
@@ -31,12 +31,12 @@ jobs:
         echo "Firestore emulator is ready!"
     
     - name: Install dependencies (orders)
-      working-directory: services/orders
+      working-directory: order-service
       run: |
         python -m pip install -r requirements/dev.txt
     
     - name: Lint & Unit Test (orders)
-      working-directory: services/orders
+      working-directory: order-service
       env:
         FIRESTORE_EMULATOR_HOST: localhost:8085
         GCLOUD_PROJECT: test-project
