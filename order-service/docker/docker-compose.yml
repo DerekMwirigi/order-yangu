@@ -1,0 +1,29 @@
+services:
+  orders-app:
+    depends_on:
+      - orders-firestore-emulator
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    container_name: order-yangu-orders-app
+    image: order-yangu-orders-app:latest
+    environment:
+      - ORDERS_FIRESTORE_EMULATOR_HOST=orders-firestore-emulator:8085
+      - ORDERS_FIRESTORE_PROJECT_ID=order-yangu-orders-dev
+    ports:
+      - "8001:8080"
+    command: sh -c "sh /app/run_app.sh"
+  
+  orders-firestore-emulator:
+    build:
+      context: .
+      dockerfile: ./firestore/Dockerfile
+    container_name: order-yangu-orders-firestore-emulator
+    image: order-yangu-orders-firestore-emulator:latest
+    command: >
+      gcloud beta emulators firestore start
+      --host-port=0.0.0.0:8085
+      --project=order-yangu-orders-dev
+      --quiet
+    ports:
+      - "8030:8085"
