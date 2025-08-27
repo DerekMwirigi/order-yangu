@@ -6,10 +6,6 @@ on:
   push:
     branches: [ "main" ]
   
-  paths:
-      - 'order-service/**'
-      - 'iac/**'
-      
 env:
   IMAGE_NAME: ghcr.io/${{ github.repository }}/orders-service-app
   TF_STATE_RESOURCE_NAME: 'google_cloud_run_v2_service.order_service'
