@@ -16,3 +16,8 @@ htmlcov/
 **/.ruff_cache/
 **/.pytest_cache/
 *.code-workspace
+
+
+.terraform
+.terraform.*
+terraform.*
