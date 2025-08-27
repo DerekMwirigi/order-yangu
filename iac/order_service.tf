@@ -5,7 +5,7 @@ resource "google_cloud_run_v2_service" "order_service" {
 
   template {
     containers {
-      image = "ghcr.io/derekmwirigi/order-yangu/orders-service-app:${var.order_service_tag}"
+      image = "us-central1-docker.pkg.dev/order-yangu-470223/order-yangu/order-service-app:${var.order_service_tag}"
       ports {
         container_port = 8080
       }
