@@ -9,7 +9,7 @@ env:
   IMAGE_NAME: ghcr.io/${{ github.repository }}/orders-service-app
 
 jobs:
-  test:
+  test-order-service:
     runs-on: ubuntu-latest
     
     steps:
@@ -50,8 +50,8 @@ jobs:
       if: always()
       run: docker rm -f firestore-emulator
   
-  build:
-    needs: test
+  build-order-service:
+    needs: test-order-service
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     
@@ -91,3 +91,31 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+  
+  deploy-order-service:
+    needs: build-order-service
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+      
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: 'Authenticate to Google Cloud'
+        id: 'auth'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          credentials_json: '${{ secrets.GCLOUD_AUTH }}'
+      
+      - name: 'Set up Terraform'
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.8.0
+      
+      - name: 'Terraform Init'
+        run: terraform init
+        working-directory: ./iac 
