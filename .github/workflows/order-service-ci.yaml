@@ -11,7 +11,7 @@ env:
   GCP_REGION: 'us-central1'
   GCP_ARTIFACT_REPO: 'order-yangu'
 
-  IMAGE_NAME: ${{ vars.GCP_REGION }}-docker.pkg.dev/${{ vars.GCP_PROJECT_ID }}/${{ vars.GCP_ARTIFACT_REPO }}/order-service-app
+  IMAGE_NAME: ${{ env.GCP_REGION }}-docker.pkg.dev/${{ env.GCP_PROJECT_ID }}/${{ env.GCP_ARTIFACT_REPO }}/order-service-app
   
   TF_STATE_RESOURCE_NAME: 'google_cloud_run_v2_service.order_service'
 
