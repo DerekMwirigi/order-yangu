@@ -12,7 +12,7 @@ resource "google_cloud_run_domain_mapping" "order_service_domain" {
 # Mapping a custom domain to the payment-service
 resource "google_cloud_run_domain_mapping" "payment_service_domain" {
   location = var.gcp_region
-  name     = "payments.paymentsyangu.top"
+  name     = "payments.orderyangu.top"
   spec {
     route_name = google_cloud_run_v2_service.payment_service.name
   }
