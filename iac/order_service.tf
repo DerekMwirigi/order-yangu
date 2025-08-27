@@ -16,6 +16,11 @@ resource "google_cloud_run_v2_service" "order_service" {
 resource "google_cloud_run_domain_mapping" "order_service_domain" {
   location = var.gcp_region
   name     = "orders.orderyangu.top"
+
+  metadata {
+    namespace = var.gcp_project_id
+  }
+  
   spec {
     route_name = google_cloud_run_v2_service.order_service.name
   }
